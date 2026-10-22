@@ -30,10 +30,10 @@
     if ($bmi_arrotondato < 18.5) {
         $classe = "sottopeso";
         $testo = "SOTTOPESO";
-    } elseif ($bmi_arrotondato >= 18.5 && $bmi_arrotondato <= 24.9) {
+    } elseif ($bmi_arrotondato >= 18.5 && $bmi_arrotondato <= 24.99) {
         $classe = "normopeso";
         $testo = "NORMOPESO";
-    } elseif ($bmi_arrotondato >= 25 && $bmi_arrotondato <= 29.9) {
+    } elseif ($bmi_arrotondato >= 25 && $bmi_arrotondato <= 29.99) {
         $classe = "sovrappeso";
         $testo = "SOVRAPPESO";
     } else {
