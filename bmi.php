@@ -1,3 +1,9 @@
+<?php
+    if($_SERVER['REQUEST_METHOD'] == 'GET'){
+        header("Location: form.html");
+    }
+?>
+
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -12,6 +18,9 @@
     <h1>Il tuo BMI</h1>
 
     <?php
+
+    
+
     // 1. Leggiamo i dati inviati dal form tramite $_POST
     $nome = $_POST['nome'];
     $peso = $_POST['peso'];
@@ -40,6 +49,46 @@
         $classe = "obesita";
         $testo = "OBESITÀ";
     }
+
+    
+
+    $myfile = fopen("log.csv", "a") or die("non puoi aprire il file");
+
+    if($myfile == TRUE){
+        //preparazione del record di log
+        $record = "";
+        $record .= date("d/m/Y");
+        $record .= "; ";
+        $record .= date("G:i:s");
+        $record .= "; ";  
+        $record .= $_SERVER['REMOTE_ADDR'];
+        $record .= "; ";  
+        $record .= $nome;  
+        $record .= "; ";  
+        $record .= $altezza_cm; 
+        $record .= "; ";  
+        $record .= $peso;  
+        $record .= "; ";  
+        $record .= $bmi_arrotondato; 
+        $record .= "; ";
+        $record .= $testo; 
+        $record .= "; ";
+        $record .= "\n";
+
+
+
+
+
+
+        //registrazione del record
+        fwrite($myfile,$record);
+
+        fclose($myfile);
+    }     
+
+        
+        
+        
     ?>
 
     <!-- 6. Creiamo l'unica card HTML. 
