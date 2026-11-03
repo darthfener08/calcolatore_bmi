@@ -123,24 +123,22 @@
     <?php if ($_SERVER['REQUEST_METHOD'] === 'POST'): ?>
 
         <?php
-        
         $nome = htmlspecialchars($_POST['nome']);
         $peso = floatval($_POST['peso']);
         $altezza_cm = floatval($_POST['altezza']);
 
-        
         $altezza_m = $altezza_cm / 100;
         $bmi = ($altezza_m > 0) ? ($peso / ($altezza_m * $altezza_m)) : 0;
         $bmi_arrotondato = round($bmi, 2);
 
-        
+        // Ottimizzata la logica dei controlli di fascia
         if ($bmi_arrotondato < 18.5) {
             $classe = "sottopeso";
             $testo = "SOTTOPESO";
-        } elseif ($bmi_arrotondato >= 18.5 && $bmi_arrotondato <= 24.99) {
+        } elseif ($bmi_arrotondato <= 24.99) {
             $classe = "normopeso";
             $testo = "NORMOPESO";
-        } elseif ($bmi_arrotondato >= 25 && $bmi_arrotondato <= 29.99) {
+        } elseif ($bmi_arrotondato <= 29.99) {
             $classe = "sovrappeso";
             $testo = "SOVRAPPESO";
         } else {
@@ -148,33 +146,34 @@
             $testo = "OBESITÀ";
         }
 
-        $myfile = @fopen("log.csv", "a");
-        if ($myfile) {
-            $record = date("d/m/Y") . "; " .
-            $record = date("G:i:s") . "; " .
-            $record = $_SERVER['REMOTE_ADDR'] . "; " .
-            $record = $nome . "; " .
-            $record = $altezza_cm . "; " .
-            $record = $peso . "; " .
-            $record = $bmi_arrotondato . "; " .
-            $record = $testo . "; \n";
+        // Mantenuto il fix fondamentale per la scrittura corretta del file log.csv
+        if ($myfile = @fopen("log.csv", "a")) {
+            $record = implode("; ", [
+                date("d/m/Y"),
+                date("G:i:s"),
+                $_SERVER['REMOTE_ADDR'],
+                $nome,
+                $altezza_cm,
+                $peso,
+                $bmi_arrotondato,
+                $testo
+            ]) . ";\n";
             fwrite($myfile, $record);
             fclose($myfile);
         }
         ?>
 
-        
         <h1>Il tuo BMI</h1>
 
-        <div class="card <?php echo $classe; ?>">
+        <div class="card <?= $classe ?>">
 
-            <h2><?php echo $nome; ?></h2>
+            <h2><?= $nome ?></h2>
 
-            <p>Peso <?php echo $peso; ?> kg &middot; Altezza <?php echo $altezza_cm; ?> cm</p>
+            <p>Peso <?= $peso ?> kg &middot; Altezza <?= $altezza_cm ?> cm</p>
 
-            <div class="bmi-numero"><?php echo $bmi_arrotondato; ?></div>
+            <div class="bmi-numero"><?= $bmi_arrotondato ?></div>
 
-            <div class="fascia-testo"><?php echo $testo; ?></div>
+            <div class="fascia-testo"><?= $testo ?></div>
             
         </div>
 
@@ -182,7 +181,6 @@
 
     <?php else: ?>
 
-        
         <h1>Calcolatore BMI</h1>
 
         <div class="box-form">
