@@ -121,7 +121,6 @@
 <body>
 
     <?php if ($_SERVER['REQUEST_METHOD'] === 'POST'): 
-        // Assegnazione diretta dei dati inviati dal form senza funzioni di pulizia o cast
         $nome = $_POST['nome'];
         $peso = $_POST['peso'];
         $altezza_cm = $_POST['altezza'];
