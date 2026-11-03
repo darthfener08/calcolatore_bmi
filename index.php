@@ -123,17 +123,17 @@
     <?php if ($_SERVER['REQUEST_METHOD'] === 'POST'): ?>
 
         <?php
-        // 1. Leggiamo i dati solo quando il form viene inviato
+        
         $nome = htmlspecialchars($_POST['nome']);
         $peso = floatval($_POST['peso']);
         $altezza_cm = floatval($_POST['altezza']);
 
-        // 2. Calcolo del BMI
+        
         $altezza_m = $altezza_cm / 100;
         $bmi = ($altezza_m > 0) ? ($peso / ($altezza_m * $altezza_m)) : 0;
         $bmi_arrotondato = round($bmi, 2);
 
-        // 3. Calcolo della fascia
+        
         if ($bmi_arrotondato < 18.5) {
             $classe = "sottopeso";
             $testo = "SOTTOPESO";
@@ -148,7 +148,6 @@
             $testo = "OBESITÀ";
         }
 
-        // 4. Scrittura nel file di log
         $myfile = @fopen("log.csv", "a");
         if ($myfile) {
             $record = date("d/m/Y") . "; " .
