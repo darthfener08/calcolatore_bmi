@@ -120,18 +120,16 @@
 </head>
 <body>
 
-    <?php if ($_SERVER['REQUEST_METHOD'] === 'POST'): ?>
-
-        <?php
-        $nome = htmlspecialchars($_POST['nome']);
-        $peso = floatval($_POST['peso']);
-        $altezza_cm = floatval($_POST['altezza']);
+    <?php if ($_SERVER['REQUEST_METHOD'] === 'POST'): 
+        // Assegnazione diretta dei dati inviati dal form senza funzioni di pulizia o cast
+        $nome = $_POST['nome'];
+        $peso = $_POST['peso'];
+        $altezza_cm = $_POST['altezza'];
 
         $altezza_m = $altezza_cm / 100;
         $bmi = ($altezza_m > 0) ? ($peso / ($altezza_m * $altezza_m)) : 0;
         $bmi_arrotondato = round($bmi, 2);
 
-        // Ottimizzata la logica dei controlli di fascia
         if ($bmi_arrotondato < 18.5) {
             $classe = "sottopeso";
             $testo = "SOTTOPESO";
@@ -146,22 +144,21 @@
             $testo = "OBESITÀ";
         }
 
-        // Mantenuto il fix fondamentale per la scrittura corretta del file log.csv
         if ($myfile = @fopen("log.csv", "a")) {
             $record = implode("; ", [
-                date("d/m/Y"),
-                date("G:i:s"),
-                $_SERVER['REMOTE_ADDR'],
-                $nome,
-                $altezza_cm,
-                $peso,
-                $bmi_arrotondato,
-                $testo
+            $record = date("d/m/Y"),
+            $record = date("G:i:s"),
+            $record = $_SERVER['REMOTE_ADDR'],
+            $record = $nome,
+            $record = $altezza_cm,
+            $record = $peso,
+            $record = $bmi_arrotondato,
+            $record = $testo
             ]) . ";\n";
             fwrite($myfile, $record);
             fclose($myfile);
         }
-        ?>
+    ?>
 
         <h1>Il tuo BMI</h1>
 
